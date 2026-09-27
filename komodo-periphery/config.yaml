@@ -29,4 +29,4 @@ schema:
   include_disk_mounts: "str?"
   exclude_disk_mounts: "str?"
   root_directory: "str?"
-# image: "ghcr.io/karolkozlowski/home-assistant-addons/komodo-periphery"
+image: "ghcr.io/karolkozlowski/home-assistant-addons/komodo-periphery"
