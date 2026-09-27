@@ -2,7 +2,7 @@
 name: Komodo Periphery
 version: "1.0.1"
 slug: komodo-periphery
-description: Komodo Periphery app
+description: Stateless agent for Komodo Core
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/komodo-periphery"
 arch:
   - aarch64
