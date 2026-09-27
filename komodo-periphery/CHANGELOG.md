@@ -1,4 +1,8 @@
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 1.0.7
+
+- Add generic /root permissions to AppArmor profile
+
 ## 1.0.6
 
 - Add generic /root permissions to AppArmor profile
