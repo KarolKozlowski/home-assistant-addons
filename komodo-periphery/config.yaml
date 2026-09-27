@@ -9,8 +9,6 @@ arch:
   - amd64
 init: false
 docker_api: true
-map:
-  - share:rw
 options:
   core_address: ""
   connect_as: ""
@@ -21,8 +19,8 @@ options:
   exclude_disk_mounts: ""
   root_directory: "/data/komodo"
 schema:
-  core_address: "str?"
-  connect_as: "str?"
+  core_address: "str"
+  connect_as: "str"
   onboarding_key: "str?"
   disable_terminals: "bool?"
   disable_container_exec: "bool?"
