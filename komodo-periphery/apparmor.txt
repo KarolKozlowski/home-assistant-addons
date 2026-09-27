@@ -32,6 +32,7 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
 
   profile periphery flags=(attach_disconnected,mediate_deleted) {
     #include <abstractions/base>
+    #include <abstractions/nameservice>
 
     # Receive signals from S6-Overlay
     signal (receive) peer=komodo-periphery,
