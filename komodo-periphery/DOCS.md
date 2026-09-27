@@ -11,8 +11,8 @@ intend to manage from Komodo.
 
 1. Install and start Komodo Core.
 2. In Komodo, open **Servers**, create the server you want Periphery to use,
-	 and create an onboarding key in the server settings. Copy the key; Komodo
-	 shows it only when it is created.
+    and create an onboarding key in the server settings. Copy the key; Komodo
+     shows it only when it is created.
 3. Install this app in Home Assistant.
 
 ## Configuration
@@ -20,20 +20,20 @@ intend to manage from Komodo.
 Configure the app before starting it:
 
 - **Core address**: The address of Komodo Core reachable from the app, for
-	example `komodo.example.com`.
-- **Connect as**: The name this periphery instance as it should appear to 
+    example `komodo.example.com`.
+- **Connect as**: The name this periphery instance as it should appear to
     Komodo Core.
 - **Onboarding key**: Paste the key created in Komodo. It is required when
-	connecting a new server. It is not needed for a server that has already
-	been connected and authenticated.
+    connecting a new server. It is not needed for a server that has already
+    been connected and authenticated.
 - **Root directory**: The persistent directory used by Periphery for managed
-	repositories, stacks, builds, and its key material. The default is
-	`/data/komodo`.
+    repositories, stacks, builds, and its key material. The default is
+    `/data/komodo`.
 - **Disable terminals**: Disable remote terminal access through Periphery.
 - **Disable container exec**: Disable remote shell access to containers.
 - **Include disk mounts** and **Exclude disk mounts**: Optional comma-separated
-	paths used to filter the disk mounts reported to Komodo. Usually leave both
-	empty unless disk usage is being reported incorrectly.
+    paths used to filter the disk mounts reported to Komodo. Usually leave both
+    empty unless disk usage is being reported incorrectly.
 
 Start the app after saving the configuration. On the first successful
 connection, Periphery creates its key pair and Komodo records the public key.
@@ -50,12 +50,12 @@ authenticate the Periphery instance.
 ## Troubleshooting
 
 - If the app cannot connect, verify that **Core address** includes the correct
-	hostname, port, and protocol and is reachable from Home Assistant.
+    hostname, port, and protocol and is reachable from Home Assistant.
 - If onboarding fails, create a new onboarding key and restart the app. Treat
-	onboarding keys as secrets and do not share them.
+    onboarding keys as secrets and do not share them.
 - If Docker operations fail, verify that the Home Assistant host's Docker API
-	is available and that the paths used by your stacks are accessible to the
-	Docker engine.
+    is available and that the paths used by your stacks are accessible to the
+    Docker engine.
 
 For the complete Komodo connection and authentication reference, see
 [Connect More Servers](https://komo.do/docs/setup/connect-servers).
