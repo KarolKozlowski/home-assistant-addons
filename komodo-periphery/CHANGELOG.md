@@ -1,4 +1,8 @@
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 1.0.5
+
+- Add  permissions for starship to AppArmor profile
+
 ## 1.0.4
 
 - Add shell permissions to AppArmor profile
