@@ -1,0 +1,25 @@
+configuration:
+  core_address:
+    name: Core address
+    description: The address of Komodo Core reachable from this app.
+  connect_as:
+    name: Connect as
+    description: The name this periphery instance as it should appear to Komodo Core.
+  onboarding_key:
+    name: Onboarding key
+    description: Komodo Server onboarding key used to register a new server on its first connection.
+  disable_terminals:
+    name: Disable terminals
+    description: Disable remote terminal and shell access through Periphery.
+  disable_container_exec:
+    name: Disable container exec
+    description: Disable remote shell access to containers through the Docker exec API.
+  include_disk_mounts:
+    name: Include disk mounts
+    description: Optional comma-separated paths to include in the disk usage reported to Komodo.
+  exclude_disk_mounts:
+    name: Exclude disk mounts
+    description: Optional comma-separated paths to exclude from the disk usage reported to Komodo.
+  root_directory:
+    name: Root directory
+    description: Persistent directory used by Periphery for repositories, stacks, builds, and key material.

@@ -1,0 +1,38 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start the example service
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+# Add your code here
+
+# Declare variables
+declare PERIPHERY_ROOT_DIRECTORY
+declare PERIPHERY_CORE_ADDRESS
+declare PERIPHERY_CONNECT_AS
+declare PERIPHERY_ONBOARDING_KEY
+declare PERIPHERY_DISABLE_TERMINALS
+declare PERIPHERY_DISABLE_CONTAINER_EXEC
+declare PERIPHERY_INCLUDE_DISK_MOUNTS
+declare PERIPHERY_EXCLUDE_DISK_MOUNTS
+
+# load configuration from Home Assistant options
+export PERIPHERY_ROOT_DIRECTORY=$(bashio::config 'root_directory')
+export PERIPHERY_CORE_ADDRESS=$(bashio::config 'core_address')
+export PERIPHERY_CONNECT_AS=$(bashio::config 'connect_as')
+export PERIPHERY_ONBOARDING_KEY=$(bashio::config 'onboarding_key')
+export PERIPHERY_DISABLE_TERMINALS=$(bashio::config 'disable_terminals')
+export PERIPHERY_DISABLE_CONTAINER_EXEC=$(bashio::config 'disable_container_exec')
+export PERIPHERY_INCLUDE_DISK_MOUNTS=$(bashio::config 'include_disk_mounts')
+export PERIPHERY_EXCLUDE_DISK_MOUNTS=$(bashio::config 'exclude_disk_mounts')
+
+# Print some environment variables for debugging purposes
+bashio::log.info "PERIPHERY_ROOT_DIRECTORY=${PERIPHERY_ROOT_DIRECTORY}"
+bashio::log.info "PERIPHERY_CORE_ADDRESS=${PERIPHERY_CORE_ADDRESS}"
+bashio::log.info "PERIPHERY_CONNECT_AS=${PERIPHERY_CONNECT_AS}"
+
+## Update certificates.
+update-ca-certificates
+
+## Run your program
+exec /usr/local/bin/periphery

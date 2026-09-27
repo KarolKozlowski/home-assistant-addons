@@ -1,0 +1,32 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
+name: Komodo Periphery
+version: "1.0.0"
+slug: komodo-periphery
+description: Komodo Periphery app
+url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/komodo-periphery"
+arch:
+  - aarch64
+  - amd64
+init: false
+docker_api: true
+map:
+  - share:rw
+options:
+  core_address: ""
+  connect_as: ""
+  onboarding_key: ""
+  disable_terminals: false
+  disable_container_exec: false
+  include_disk_mounts: ""
+  exclude_disk_mounts: ""
+  root_directory: "/data/komodo"
+schema:
+  core_address: "str?"
+  connect_as: "str?"
+  onboarding_key: "str?"
+  disable_terminals: "bool?"
+  disable_container_exec: "bool?"
+  include_disk_mounts: "str?"
+  exclude_disk_mounts: "str?"
+  root_directory: "str?"
+# image: "ghcr.io/karolkozlowski/home-assistant-addons/komodo-periphery"
