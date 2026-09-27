@@ -1,6 +1,6 @@
 #include <tunables/global>
 
-profile example flags=(attach_disconnected,mediate_deleted) {
+profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
   #include <abstractions/base>
 
   # Capabilities
@@ -28,19 +28,20 @@ profile example flags=(attach_disconnected,mediate_deleted) {
   /data/** rw,
 
   # Start new profile for service
-  /usr/bin/my_program cx -> my_program,
+   /usr/local/bin/periphery cx -> periphery,
 
-  profile my_program flags=(attach_disconnected,mediate_deleted) {
+  profile periphery flags=(attach_disconnected,mediate_deleted) {
     #include <abstractions/base>
 
     # Receive signals from S6-Overlay
-    signal (receive) peer=*_example,
+    signal (receive) peer=komodo-periphery,
+
+    # Periphery connects to Komodo Core and the Docker API
+    network,
+    /var/run/docker.sock rw,
 
     # Access to options.json and other files within your app
-    /data/** rw,
-
-    # Access to mapped volumes specified in config.json
-    /share/** rw,
+    /data/** rwix,
 
     # Access required for service functionality
     # Note: List was built by doing the following:
@@ -48,10 +49,22 @@ profile example flags=(attach_disconnected,mediate_deleted) {
     # 2. Add `complain` as a flag to this profile temporarily and run the app
     # 3. Review the audit log with `journalctl _TRANSPORT="audit" -g 'apparmor="ALLOWED"'` and add other access as needed
     # Remember to remove the `complain` flag when you are done
-    /usr/bin/my_program r,
+    /usr/local/bin/periphery r,
+    /usr/bin/** ix,
+    /usr/local/bin/** ix,
+    /bin/** ix,
     /bin/bash rix,
     /bin/echo ix,
+    /run/** rwk,
+    /tmp/** rwkix,
+    /dev/** rw,
+    /proc/** r,
+    /sys/** r,
+    /etc/ssl/** r,
+    /etc/ca-certificates/** r,
+    /usr/share/ca-certificates/** r,
     /etc/passwd r,
+    /etc/group r,
     /dev/tty rw,
   }
 }
