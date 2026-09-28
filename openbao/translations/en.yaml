@@ -1,0 +1,4 @@
+configuration:
+  config_file:
+    name: Config file
+    description: Name of the OpenBao HCL configuration file in the app configuration directory.

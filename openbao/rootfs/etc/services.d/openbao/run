@@ -1,0 +1,49 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start the example service
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+# Ensure the /etc directory has the correct permissions for the OpenBao user
+# and for name resolution before any network operations below.
+chmod 755 /etc
+
+# Update certificates.
+update-ca-certificates
+
+# Install any packages dropped into the shared deb directory.
+SHARE_DEB_DIR="/share/openbao/deb"
+if compgen -G "${SHARE_DEB_DIR}/*.deb" > /dev/null; then
+    bashio::log.info "Installing packages from ${SHARE_DEB_DIR}"
+    apt-get update \
+        && apt-get install -y --no-install-recommends "${SHARE_DEB_DIR}"/*.deb \
+        || bashio::log.warning "Failed to install packages from ${SHARE_DEB_DIR}"
+    rm -rf /var/lib/apt/lists/*
+fi
+
+# Declare variables
+declare BAO_CONFIG_FILE
+
+# load configuration from Home Assistant options
+BAO_CONFIG_FILE="/config/$(bashio::config 'config_file')"
+
+# Print some environment variables for debugging purposes
+bashio::log.info "OpenBao configuration file: ${BAO_CONFIG_FILE}"
+
+# Ensure Bao directories exist and have correct ownership
+for dir in /data/logs /data/file /data/bao /data/openbao/plugins; do
+    mkdir -p "$dir"
+
+    if [ "$(stat -c %u "$dir")" != "$(id -u openbao)" ]; then
+        chown -R openbao:openbao "$dir" \
+            || bashio::log.warning "Could not chown ${dir}"
+    fi
+done
+
+while [ ! -f "$BAO_CONFIG_FILE" ]; do
+    bashio::log.error "OpenBao config file not found: ${BAO_CONFIG_FILE}; retrying in 60 seconds"
+    sleep 60
+done
+
+# Run server
+exec gosu openbao /usr/bin/bao server -config="$BAO_CONFIG_FILE"

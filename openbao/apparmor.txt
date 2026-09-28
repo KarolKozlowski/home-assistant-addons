@@ -1,0 +1,113 @@
+#include <tunables/global>
+
+profile openbao flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Capabilities used by s6, gosu, and apt/dpkg
+  capability chown,
+  capability fowner,
+  capability setuid,
+  capability setgid,
+  capability dac_override,
+  file,
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # S6-Overlay
+  /init ix,
+  /bin/** ix,
+  /sbin/** ix,
+  /usr/bin/** ix,
+  /usr/sbin/** ix,
+  /run/{s6,s6-rc*,service}/** ix,
+  /package/** ix,
+  /command/** ix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /run/{,**} rwk,
+  /run/pcscd/** rwk,
+  /dev/bus/usb/** rw,
+  /dev/usb/** rw,
+  /etc/reader.conf.d/** r,
+  /etc/pcscd/** r,
+  /usr/lib/pcsc/drivers/** mr,
+  /dev/tty rw,
+
+  # Bashio and certificate setup
+  network,
+  /usr/lib/bashio/** ix,
+  /tmp/** rwk,
+  /etc/ssl/** rw,
+  /etc/ca-certificates/** rw,
+  /usr/share/ca-certificates/** r,
+
+  # apt/dpkg, used to install packages dropped into the shared deb directory
+  /etc/apt/** rw,
+  /var/lib/apt/** rwk,
+  /var/cache/apt/** rwk,
+  /var/lib/dpkg/** rwk,
+  /var/log/apt/** rw,
+  /var/cache/debconf/** rw,
+  /etc/debconf.conf r,
+
+  # App configuration and persistent application data
+  /config/** r,
+  /addon_config/** r,
+  /share/openbao/deb/** r,
+  /data/ rwix,
+  /data/**/ rwix,
+  /data/** rw,
+
+  # Drop privileges before starting OpenBao
+  /usr/bin/gosu ix,
+  /usr/bin/bao cx -> bao,
+
+  profile bao flags=(attach_disconnected,mediate_deleted) {
+    #include <abstractions/base>
+    #include <abstractions/nameservice>
+
+    # Receive signals from the supervisor profile
+    signal (receive) peer=openbao,
+
+    # OpenBao serves clients and may contact external storage or auth backends
+    network,
+
+    # OpenBao storage, audit logs, and temporary files
+    /data/ rwix,
+    /data/**/ rwix,
+    /data/** rwkm,
+    /tmp/** rwk,
+    /run/pcscd/** rwk,
+
+    # Read the user-provided configuration and trust store
+    /config/** r,
+    /addon_config/** r,
+    /ssl/** r,
+    /etc/ssl/** r,
+    /etc/ca-certificates/** r,
+    /usr/share/ca-certificates/** r,
+    /etc/hosts r,
+    /etc/resolv.conf r,
+    /etc/nsswitch.conf r,
+    /etc/passwd r,
+    /etc/group r,
+
+    # OpenBao binary and runtime state
+    /usr/bin/bao rix,
+    # Plugins (seals, auth methods, etc.) fetched or provided under /data
+    /data/openbao/plugins/** rix,
+    # CLI client token cache when invoked interactively (e.g. `bao login`)
+    /root/.vault-token* rw,
+    /dev/urandom r,
+    /dev/random r,
+    /dev/** rw,
+    /proc/** r,
+    /sys/** r,
+    /dev/tty rw,
+
+    # OpenBao can lock memory for secure secret handling unless disabled in
+    # the supplied configuration.
+    capability ipc_lock,
+  }
+}

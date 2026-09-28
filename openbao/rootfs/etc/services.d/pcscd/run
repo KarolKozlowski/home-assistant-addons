@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bashio
+
+# Run PC/SC Lite under s6 supervision so USB smart-card readers are available
+# before OpenBao starts using them.
+exec /usr/sbin/pcscd --foreground --disable-polkit

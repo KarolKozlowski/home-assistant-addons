@@ -1,0 +1,33 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
+name: OpenBao
+version: "1.0.0"
+slug: openbao
+description: Open-source secrets manager
+url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/openbao"
+
+arch:
+  - aarch64
+  - amd64
+
+init: false
+
+ports:
+  8200/tcp: 8200
+
+usb: true
+
+map:
+  - type: share
+    read_only: True
+  - type: addon_config
+    read_only: True
+  - type: ssl
+    read_only: True
+
+options:
+  config_file: "bao.hcl"
+
+schema:
+  config_file: str
+
+image: "ghcr.io/karolkozlowski/home-assistant-addons/openbao"
