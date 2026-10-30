@@ -10,9 +10,6 @@ FROM periphery-${TARGETARCH} AS periphery-bin
 
 FROM ghcr.io/hassio-addons/debian-base:9.5.1
 
-ARG TARGETARCH
-ARG TEMPIO_VERSION=2021.09.0
-
 # Dependencies for Debian base
 ARG docker_cli="docker.io docker-buildx-plugin docker-compose-plugin"
 ARG generic_tools="git curl wget ca-certificates"
@@ -27,12 +24,6 @@ RUN install -m 0755 -d /etc/apt/keyrings \
         ${docker_cli} \
         ${generic_tools} \
     && rm -rf /var/lib/apt/lists/*
-
-# Download tempio
-RUN tempio_arch=$(echo "${TARGETARCH}" | sed 's/arm64/aarch64/') \
-    && curl -sSLf -o /usr/bin/tempio \
-        "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${tempio_arch}" \
-    && chmod +x /usr/bin/tempio
 
 # Starship prompt
 RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes --bin-dir /usr/local/bin
