@@ -1,18 +1,14 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
-ARG BUILD_FROM=ghcr.io/hassio-addons/ubuntu-base:12.0.1
 
-# Define the base image for the OpenBao binaries
-ARG OPENBAO_IMAGE=ghcr.io/openbao/openbao:2.7.0
-
-# Binary source stages
-FROM --platform=linux/amd64 ${OPENBAO_IMAGE} AS openbao-amd64
-FROM --platform=linux/arm64 ${OPENBAO_IMAGE} AS openbao-arm64
+# Image references are literal so Dependabot can track them
+FROM --platform=linux/amd64 ghcr.io/openbao/openbao:2.7.0 AS openbao-amd64
+FROM --platform=linux/arm64 ghcr.io/openbao/openbao:2.7.0 AS openbao-arm64
 
 # Dynamically pick the source stage based on TARGETARCH
 ARG TARGETARCH
 FROM openbao-${TARGETARCH} AS openbao-bin
 
-FROM ${BUILD_FROM}
+FROM ghcr.io/hassio-addons/ubuntu-base:12.0.1
 
 # Execute during the build of the image
 ARG TEMPIO_VERSION=2021.09.0

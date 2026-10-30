@@ -1,21 +1,14 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.5.1
 
-# Define the base image for the Periphery binaries
-ARG BINARIES_IMAGE=ghcr.io/moghtech/komodo-binaries:2.3.3
-ARG X86_64_BINARIES=${BINARIES_IMAGE}-x86_64
-ARG AARCH64_BINARIES=${BINARIES_IMAGE}-aarch64
-
-# Binary source stages
-FROM --platform=linux/amd64 ${X86_64_BINARIES} AS periphery-amd64
-FROM --platform=linux/arm64 ${AARCH64_BINARIES} AS periphery-arm64
+# Image references are literal so Dependabot can track them
+FROM --platform=linux/amd64 ghcr.io/moghtech/komodo-binaries:2.3.3-x86_64 AS periphery-amd64
+FROM --platform=linux/arm64 ghcr.io/moghtech/komodo-binaries:2.3.3-aarch64 AS periphery-arm64
 
 # Dynamically pick the source stage based on TARGETARCH
 ARG TARGETARCH
 FROM periphery-${TARGETARCH} AS periphery-bin
 
-# Use the base image for the build
-FROM ${BUILD_FROM}
+FROM ghcr.io/hassio-addons/debian-base:9.5.1
 
 ARG TARGETARCH
 ARG TEMPIO_VERSION=2021.09.0
