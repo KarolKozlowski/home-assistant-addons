@@ -1,5 +1,5 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
-ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:bookworm
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.5.1
 
 # Define the base image for the Periphery binaries
 ARG BINARIES_IMAGE=ghcr.io/moghtech/komodo-binaries:2

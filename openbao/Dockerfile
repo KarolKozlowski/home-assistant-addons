@@ -1,5 +1,5 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
-ARG BUILD_FROM=ghcr.io/home-assistant/base-ubuntu:24.04
+ARG BUILD_FROM=ghcr.io/hassio-addons/ubuntu-base:12.0.1
 
 # Define the base image for the OpenBao binaries
 ARG OPENBAO_IMAGE=ghcr.io/openbao/openbao:2
