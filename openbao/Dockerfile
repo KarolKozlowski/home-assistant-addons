@@ -1,8 +1,8 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 
 # Image references are literal so Dependabot can track them
-FROM --platform=linux/amd64 ghcr.io/openbao/openbao:2.7.0 AS openbao-amd64
-FROM --platform=linux/arm64 ghcr.io/openbao/openbao:2.7.0 AS openbao-arm64
+FROM --platform=linux/amd64 ghcr.io/openbao/openbao:2.7.2 AS openbao-amd64
+FROM --platform=linux/arm64 ghcr.io/openbao/openbao:2.7.2 AS openbao-arm64
 
 # Dynamically pick the source stage based on TARGETARCH
 ARG TARGETARCH
