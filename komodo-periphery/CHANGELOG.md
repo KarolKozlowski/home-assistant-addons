@@ -1,7 +1,7 @@
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
 ## 2.3.4-1
 
-- Use upstream bersion as base
+- Use upstream version as base
 - Bump to 2.3.4
 
 ## 1.0.7
