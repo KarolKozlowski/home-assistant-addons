@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: OpenBao
-version: "2.7.2+build.1"
+version: "2.7.2-1"
 slug: openbao
 description: Open-source secrets manager
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/openbao"
