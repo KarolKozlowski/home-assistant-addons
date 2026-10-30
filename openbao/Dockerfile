@@ -2,7 +2,7 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/ubuntu-base:12.0.1
 
 # Define the base image for the OpenBao binaries
-ARG OPENBAO_IMAGE=ghcr.io/openbao/openbao:2
+ARG OPENBAO_IMAGE=ghcr.io/openbao/openbao:2.7.0
 
 # Binary source stages
 FROM --platform=linux/amd64 ${OPENBAO_IMAGE} AS openbao-amd64

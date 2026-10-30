@@ -2,7 +2,7 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.5.1
 
 # Define the base image for the Periphery binaries
-ARG BINARIES_IMAGE=ghcr.io/moghtech/komodo-binaries:2
+ARG BINARIES_IMAGE=ghcr.io/moghtech/komodo-binaries:2.3.3
 ARG X86_64_BINARIES=${BINARIES_IMAGE}-x86_64
 ARG AARCH64_BINARIES=${BINARIES_IMAGE}-aarch64
 
