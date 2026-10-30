@@ -2,7 +2,7 @@
 
 # Image references are literal so Dependabot can track them
 FROM --platform=linux/amd64 ghcr.io/moghtech/komodo-binaries:2.3.3-x86_64 AS periphery-amd64
-FROM --platform=linux/arm64 ghcr.io/moghtech/komodo-binaries:2.3.3-aarch64 AS periphery-arm64
+FROM --platform=linux/arm64 ghcr.io/moghtech/komodo-binaries:2.3.4-aarch64 AS periphery-arm64
 
 # Dynamically pick the source stage based on TARGETARCH
 ARG TARGETARCH
