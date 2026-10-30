@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
 ## 2.7.2-1
 
