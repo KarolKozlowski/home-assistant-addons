@@ -31,7 +31,7 @@ BAO_CONFIG_FILE="/config/$(bashio::config 'config_file')"
 bashio::log.info "OpenBao configuration file: ${BAO_CONFIG_FILE}"
 
 # Ensure Bao directories exist and have correct ownership
-for dir in /data/logs /data/file /data/bao /data/openbao/plugins; do
+for dir in /data/logs /data/file /data/bao /data/openbao/plugins /ssl/openbao; do
     mkdir -p "$dir"
 
     if [ "$(stat -c %u "$dir")" != "$(id -u openbao)" ]; then
