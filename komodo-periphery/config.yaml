@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: Komodo Periphery
-version: "2.3.3+build.1"
+version: "2.3.4+build.1"
 slug: komodo-periphery
 description: Stateless agent for Komodo Core
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/komodo-periphery"
