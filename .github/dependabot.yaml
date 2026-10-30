@@ -4,14 +4,25 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-      time: "06:00"
+    groups:
+      action-updates:
+        patterns:
+          - "*"
+
   - package-ecosystem: "docker"
     directory: "/komodo-periphery"
     schedule:
       interval: daily
-      time: "06:00"
+    groups:
+      docker-komodo:
+        patterns:
+          - "*"
+
   - package-ecosystem: "docker"
     directory: "/openbao"
     schedule:
       interval: daily
-      time: "06:00"
+    groups:
+      docker-openbao:
+        patterns:
+          - "*"
