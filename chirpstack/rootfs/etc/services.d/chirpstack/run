@@ -1,0 +1,159 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Run ChirpStack once Valkey is ready
+# ==============================================================================
+
+declare CONFIG_DIR=/config
+declare DEFAULTS_DIR=/usr/share/chirpstack/configuration
+declare SECRET_FILE=/data/api_secret
+
+# Seed region files and the main config on first start
+mkdir -p "${CONFIG_DIR}"
+for file in "${DEFAULTS_DIR}"/region_*.toml; do
+    [ -e "${CONFIG_DIR}/$(basename "${file}")" ] || cp "${file}" "${CONFIG_DIR}/"
+done
+
+# Point the gateway MQTT backend of each region at the configured broker.
+# Only the untouched upstream defaults are replaced, so manual edits are kept.
+for file in "${CONFIG_DIR}"/region_*.toml; do
+    sed -i \
+        -e 's|^\(\s*server = \)"tcp://localhost:1883"|\1"$MQTT_SERVER"|' \
+        -e 's|^\(\s*username = \)""|\1"$MQTT_USERNAME"|' \
+        -e 's|^\(\s*password = \)""|\1"$MQTT_PASSWORD"|' \
+        "${file}"
+done
+
+# Escape a value for use inside a TOML basic string
+toml_escape() {
+    local value="${1//\\/\\\\}"
+    printf '%s' "${value//\"/\\\"}"
+}
+
+# MQTT broker: explicit options win, then the Home Assistant MQTT service
+MQTT_SERVER="tcp://core-mosquitto:1883/"
+MQTT_USERNAME=""
+MQTT_PASSWORD=""
+if bashio::config.has_value 'mqtt_server'; then
+    MQTT_SERVER="$(bashio::config 'mqtt_server')"
+    MQTT_USERNAME="$(bashio::config 'mqtt_username')"
+    MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
+elif bashio::services.available "mqtt"; then
+    MQTT_SERVER="tcp://$(bashio::services mqtt "host"):$(bashio::services mqtt "port")/"
+    MQTT_USERNAME="$(bashio::services mqtt "username")"
+    MQTT_PASSWORD="$(bashio::services mqtt "password")"
+else
+    bashio::log.warning "MQTT service not available; using ${MQTT_SERVER} without credentials"
+fi
+# Region files reference these through ChirpStack's $VAR substitution
+MQTT_SERVER="$(toml_escape "${MQTT_SERVER}")"
+MQTT_USERNAME="$(toml_escape "${MQTT_USERNAME}")"
+MQTT_PASSWORD="$(toml_escape "${MQTT_PASSWORD}")"
+# Placeholders used by configuration files from earlier app versions
+LOG_LEVEL="$(bashio::config 'log_level')"
+export MQTT_SERVER MQTT_USERNAME MQTT_PASSWORD LOG_LEVEL
+
+# API secret: option, otherwise a generated one persisted in /data
+if bashio::config.has_value 'api_secret'; then
+    API_SECRET="$(bashio::config 'api_secret')"
+else
+    if [ ! -f "${SECRET_FILE}" ]; then
+        head -c 32 /dev/urandom | base64 | tr -d '\n=+/' > "${SECRET_FILE}"
+        chmod 600 "${SECRET_FILE}"
+    fi
+    API_SECRET="$(cat "${SECRET_FILE}")"
+fi
+export CHIRPSTACK_API_SECRET="${API_SECRET}"
+
+# The configuration is generated from the app options on every start
+RUN_CONFIG_DIR=/run/chirpstack
+rm -rf "${RUN_CONFIG_DIR}"
+mkdir -p "${RUN_CONFIG_DIR}"
+for file in "${CONFIG_DIR}"/region_*.toml; do
+    ln -s "${file}" "${RUN_CONFIG_DIR}/$(basename "${file}")"
+done
+
+REGIONS=""
+for region in $(bashio::config 'regions'); do
+    REGIONS+="    \"${region}\",\n"
+done
+if [ -z "${REGIONS}" ]; then
+    bashio::log.warning "No regions enabled; enable at least one in the 'regions' option"
+fi
+
+CONF="${RUN_CONFIG_DIR}/chirpstack.toml"
+umask 077
+{
+    echo "[logging]"
+    echo "  level = \"$(bashio::config 'log_level')\""
+    echo
+    echo "[sqlite]"
+    echo "  path = \"sqlite:///data/chirpstack.sqlite\""
+    echo
+    echo "[redis]"
+    echo "  servers = [\"redis://127.0.0.1:6379/\"]"
+    echo "  cluster = false"
+    echo
+    echo "[network]"
+    echo "  net_id = \"$(bashio::config 'net_id')\""
+    echo "  enabled_regions = ["
+    printf '%b' "${REGIONS}"
+    echo "  ]"
+    echo
+    echo "[gateway]"
+    echo "  allow_unknown_gateways = $(bashio::config 'allow_unknown_gateways')"
+    echo
+    echo "[api]"
+    echo "  bind = \"0.0.0.0:8080\""
+    echo "  secret = \"$(toml_escape "${API_SECRET}")\""
+    echo
+    echo "[integration]"
+    echo "  enabled = [\"mqtt\"]"
+    echo
+    echo "  [integration.mqtt]"
+    echo "    server = \"${MQTT_SERVER}\""
+    echo "    username = \"${MQTT_USERNAME}\""
+    echo "    password = \"${MQTT_PASSWORD}\""
+    echo "    json = $(bashio::config 'mqtt_json')"
+    echo
+    echo "[user_authentication]"
+    echo "  enabled = \"$(bashio::config 'authentication')\""
+    if [ "$(bashio::config 'authentication')" = "openid_connect" ]; then
+        echo
+        echo "  [user_authentication.openid_connect]"
+        echo "    registration_enabled = $(bashio::config 'oidc_registration_enabled')"
+        echo "    provider_url = \"$(toml_escape "$(bashio::config 'oidc_provider_url')")\""
+        echo "    client_id = \"$(toml_escape "$(bashio::config 'oidc_client_id')")\""
+        echo "    client_secret = \"$(toml_escape "$(bashio::config 'oidc_client_secret')")\""
+        echo "    redirect_url = \"$(toml_escape "$(bashio::config 'oidc_redirect_url')")\""
+        echo "    logout_url = \"$(toml_escape "$(bashio::config 'oidc_logout_url')")\""
+        echo "    login_redirect = $(bashio::config 'oidc_login_redirect')"
+        echo "    login_label = \"$(toml_escape "$(bashio::config 'oidc_login_label')")\""
+        echo "    assume_email_verified = $(bashio::config 'oidc_assume_email_verified')"
+    fi
+} > "${CONF}"
+umask 022
+
+if [ "$(bashio::config 'authentication')" = "openid_connect" ] \
+    && ! bashio::config.has_value 'oidc_provider_url'; then
+    bashio::log.warning "OpenID Connect is selected but oidc_provider_url is not set"
+fi
+
+# With custom_config, hand the generated file over as a starting point
+# and run from the user-managed /config/chirpstack.toml from then on.
+if bashio::config.true 'custom_config'; then
+    if [ ! -f "${CONFIG_DIR}/chirpstack.toml" ]; then
+        bashio::log.info "Seeding ${CONFIG_DIR}/chirpstack.toml from the current options"
+        cp "${CONF}" "${CONFIG_DIR}/chirpstack.toml"
+    fi
+    RUN_CONFIG_DIR="${CONFIG_DIR}"
+fi
+
+# Wait for Valkey to answer PONG
+bashio::log.info "Waiting for Valkey"
+until [ "$(valkey-cli -h 127.0.0.1 -p 6379 ping 2>/dev/null)" = "PONG" ]; do
+    sleep 1
+done
+bashio::log.info "Valkey is ready, starting ChirpStack"
+
+cd /data || exit 1
+exec /usr/bin/chirpstack --config "${RUN_CONFIG_DIR}"

@@ -1,0 +1,65 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
+name: ChirpStack
+version: "4.20.0-1"
+slug: chirpstack
+description: Open-source LoRaWAN Network Server (SQLite + Valkey)
+url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/chirpstack"
+
+arch:
+  - aarch64
+  - amd64
+
+init: false
+
+ports:
+  8080/tcp: null
+
+ports_description:
+  8080/tcp: Web UI and API (leave empty to keep it internal-only)
+
+webui: "http://[HOST]:[PORT:8080]"
+
+services:
+  - mqtt:want
+
+map:
+  - type: app_config
+    read_only: false
+
+options:
+  log_level: info
+  regions:
+    - eu868
+  net_id: "000000"
+  allow_unknown_gateways: false
+  mqtt_json: true
+  authentication: internal
+  oidc_registration_enabled: false
+  oidc_login_redirect: false
+  oidc_assume_email_verified: false
+  custom_config: false
+
+schema:
+  log_level: list(error|warn|info|debug|trace)
+  regions:
+    - list(as923|as923_2|as923_3|as923_4|au915_0|au915_1|au915_2|au915_3|au915_4|au915_5|au915_6|au915_7|cn470_0|cn470_1|cn470_2|cn470_3|cn470_4|cn470_5|cn470_6|cn470_7|cn470_8|cn470_9|cn470_10|cn470_11|cn779|eu433|eu868|in865|ism2400|kr920|ru864|us915_0|us915_1|us915_2|us915_3|us915_4|us915_5|us915_6|us915_7)
+  net_id: match(^[0-9a-fA-F]{6}$)
+  api_secret: password?
+  allow_unknown_gateways: bool
+  mqtt_server: str?
+  mqtt_username: str?
+  mqtt_password: password?
+  mqtt_json: bool
+  authentication: list(internal|openid_connect)
+  oidc_provider_url: url?
+  oidc_client_id: str?
+  oidc_client_secret: password?
+  oidc_redirect_url: url?
+  oidc_logout_url: url?
+  oidc_login_label: str?
+  oidc_login_redirect: bool
+  oidc_assume_email_verified: bool
+  oidc_registration_enabled: bool
+  custom_config: bool
+
+image: "ghcr.io/karolkozlowski/home-assistant-addons/chirpstack"

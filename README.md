@@ -2,6 +2,7 @@
 
 ## Add-ons
 
+- [ChirpStack](./chirpstack) — LoRaWAN Network Server (SQLite + Valkey).
 - [Komodo Periphery](./komodo-periphery) — Stateless agent for Komodo Core.
 - [OpenBao](./openbao) — Open-source secrets manager.
 

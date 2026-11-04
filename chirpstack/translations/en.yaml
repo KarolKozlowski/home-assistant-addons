@@ -1,0 +1,63 @@
+configuration:
+  log_level:
+    name: Log level
+    description: ChirpStack log level.
+  regions:
+    name: Enabled regions
+    description: LoRaWAN regions to enable. Region parameters can be edited in the region_*.toml files in the app config folder.
+  net_id:
+    name: NetID
+    description: Six hex digits. 000000 is fine for private networks.
+  api_secret:
+    name: API secret
+    description: Secret used to sign API tokens. A random one is generated and kept in /data when empty.
+  allow_unknown_gateways:
+    name: Allow unknown gateways
+    description: Accept frames from gateways that are not registered in ChirpStack (handy for first tests).
+  mqtt_server:
+    name: MQTT server
+    description: Broker URL, e.g. tcp://192.168.1.10:1883/. When empty, the Home Assistant MQTT service is used.
+  mqtt_username:
+    name: MQTT username
+    description: Used only together with the MQTT server option.
+  mqtt_password:
+    name: MQTT password
+    description: Used only together with the MQTT server option.
+  mqtt_json:
+    name: MQTT JSON payloads
+    description: Publish integration events as JSON instead of Protobuf.
+  authentication:
+    name: User authentication
+    description: internal (ChirpStack users) or openid_connect (OAuth/OIDC login).
+  oidc_provider_url:
+    name: OIDC provider URL
+    description: Issuer URL of the OpenID Connect provider.
+  oidc_client_id:
+    name: OIDC client ID
+    description: Client ID registered at the provider.
+  oidc_client_secret:
+    name: OIDC client secret
+    description: Client secret registered at the provider.
+  oidc_redirect_url:
+    name: OIDC redirect URL
+    description: Public ChirpStack URL followed by /auth/oidc/callback.
+  oidc_logout_url:
+    name: OIDC logout URL
+    description: Optional provider logout URL.
+  oidc_login_label:
+    name: OIDC login label
+    description: Text of the login button.
+  oidc_login_redirect:
+    name: OIDC login redirect
+    description: Redirect to the provider immediately instead of showing the login form.
+  oidc_assume_email_verified:
+    name: OIDC assume email verified
+    description: Treat the provider's email as verified when it does not report this.
+  oidc_registration_enabled:
+    name: OIDC registration
+    description: Create ChirpStack users automatically on first OIDC login.
+  custom_config:
+    name: Custom configuration
+    description: Run from chirpstack.toml in the app config folder instead of generating it from these options. The file is seeded from the current options when missing.
+network:
+  8080/tcp: Web UI and API

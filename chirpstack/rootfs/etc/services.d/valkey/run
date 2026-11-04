@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Run Valkey (Redis-compatible) as a local, non-persistent store for ChirpStack
+# ==============================================================================
+
+bashio::log.info "Starting Valkey"
+exec valkey-server \
+    --bind 127.0.0.1 \
+    --port 6379 \
+    --protected-mode yes \
+    --save "" \
+    --appendonly no \
+    --dir /tmp \
+    --daemonize no
