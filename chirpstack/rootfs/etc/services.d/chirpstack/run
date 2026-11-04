@@ -156,4 +156,29 @@ done
 bashio::log.info "Valkey is ready, starting ChirpStack"
 
 cd /data || exit 1
+
+# Import device profiles from /share/chirpstack/device-profiles (a clone of
+# https://github.com/chirpstack/chirpstack-device-profiles). The import is an
+# upsert, and it is skipped when the directory has not changed since the last run.
+PROFILES_DIR=/share/chirpstack/device-profiles
+PROFILES_STATE=/data/device_profiles.state
+if bashio::config.true 'import_device_profiles'; then
+    if [ -d "${PROFILES_DIR}/vendors" ]; then
+        PROFILES_HASH="$(find "${PROFILES_DIR}/vendors" -type f -printf '%P %s %T@\n' | LC_ALL=C sort | sha256sum | cut -d' ' -f1)"
+        if [ "$(cat "${PROFILES_STATE}" 2>/dev/null)" = "${PROFILES_HASH}" ]; then
+            bashio::log.info "Device profiles unchanged, skipping import"
+        else
+            bashio::log.info "Importing device profiles from ${PROFILES_DIR}"
+            if /usr/bin/chirpstack --config "${RUN_CONFIG_DIR}" import-device-profiles -d "${PROFILES_DIR}"; then
+                echo "${PROFILES_HASH}" > "${PROFILES_STATE}"
+                bashio::log.info "Device profiles imported"
+            else
+                bashio::log.warning "Device profile import failed"
+            fi
+        fi
+    else
+        bashio::log.warning "import_device_profiles is enabled but ${PROFILES_DIR}/vendors does not exist"
+    fi
+fi
+
 exec /usr/bin/chirpstack --config "${RUN_CONFIG_DIR}"

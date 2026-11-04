@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 4.20.0-2
+
+- Add optional import of chirpstack-device-profiles from /share/chirpstack/device-profiles
+
 ## 4.20.0-1
 
 - Initial release of ChirpStack 4.20.0 (SQLite build) with bundled Valkey

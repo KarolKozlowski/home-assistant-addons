@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: ChirpStack
-version: "4.20.0-1"
+version: "4.20.0-2"
 slug: chirpstack
 description: Open-source LoRaWAN Network Server (SQLite + Valkey)
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/chirpstack"
@@ -25,6 +25,8 @@ services:
 map:
   - type: app_config
     read_only: false
+  - type: share
+    read_only: true
 
 options:
   log_level: info
@@ -37,6 +39,7 @@ options:
   oidc_registration_enabled: false
   oidc_login_redirect: false
   oidc_assume_email_verified: false
+  import_device_profiles: false
   custom_config: false
 
 schema:
@@ -60,6 +63,7 @@ schema:
   oidc_login_redirect: bool
   oidc_assume_email_verified: bool
   oidc_registration_enabled: bool
+  import_device_profiles: bool
   custom_config: bool
 
 image: "ghcr.io/karolkozlowski/home-assistant-addons/chirpstack"

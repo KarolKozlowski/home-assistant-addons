@@ -56,6 +56,9 @@ configuration:
   oidc_registration_enabled:
     name: OIDC registration
     description: Create ChirpStack users automatically on first OIDC login.
+  import_device_profiles:
+    name: Import device profiles
+    description: Import the chirpstack-device-profiles repository from /share/chirpstack/device-profiles on start (only when its contents changed).
   custom_config:
     name: Custom configuration
     description: Run from chirpstack.toml in the app config folder instead of generating it from these options. The file is seeded from the current options when missing.

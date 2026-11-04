@@ -15,6 +15,7 @@ The ChirpStack configuration is generated from the options below on every start.
 | `mqtt_json` | Publish events as JSON (default) instead of Protobuf. |
 | `authentication` | `internal` (default) or `openid_connect`. |
 | `oidc_*` | OpenID Connect settings, used when `authentication` is `openid_connect`. |
+| `import_device_profiles` | Import device profiles from `/share/chirpstack/device-profiles` on start (see below). |
 | `custom_config` | Use `chirpstack.toml` from the app config folder instead (see below). |
 
 ## Network exposure
@@ -91,6 +92,27 @@ All `region_*.toml` files are copied to the app config folder (`/addon_configs/<
 on first start. Select which ones are active with `regions`; tune channels and other region
 parameters by editing the files. Files are never overwritten, and the MQTT server and credentials
 in untouched files follow the app options.
+
+## Device profiles
+
+ChirpStack can import the community
+[chirpstack-device-profiles](https://github.com/chirpstack/chirpstack-device-profiles) repository,
+which provides vendors, devices, profiles and payload codecs. Clone it to the Home Assistant
+`share` folder (for example from the SSH app) and enable `import_device_profiles`:
+
+```bash
+git clone https://github.com/chirpstack/chirpstack-device-profiles.git /share/chirpstack/device-profiles
+```
+
+The import runs before ChirpStack starts and is an upsert, so it is safe to repeat. It is skipped
+when the files in `vendors/` have not changed since the last successful import. A failed import
+is logged and does not stop ChirpStack.
+
+To update the profiles, pull the latest changes and restart the app:
+
+```bash
+git -C /share/chirpstack/device-profiles pull
+```
 
 ## Custom configuration
 
