@@ -8,7 +8,7 @@ FROM --platform=linux/arm64 ghcr.io/moghtech/komodo-binaries:2.3.4-aarch64 AS pe
 ARG TARGETARCH
 FROM periphery-${TARGETARCH} AS periphery-bin
 
-FROM ghcr.io/hassio-addons/debian-base:9.5.1
+FROM ghcr.io/hassio-addons/debian-base:9.5.2
 
 # Dependencies for Debian base
 ARG docker_cli="docker.io docker-buildx-plugin docker-compose-plugin"
