@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: ChirpStack
-version: "4.20.0-2"
+version: "4.20.0-3"
 slug: chirpstack
 description: Open-source LoRaWAN Network Server (SQLite + Valkey)
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/chirpstack"

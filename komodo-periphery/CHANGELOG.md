@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 2.3.4-2
+
+- Bump hassio-addons/debian-base from 9.5.1 to 9.5.2
+
 ## 2.3.4-1
 
 - Use upstream version as base

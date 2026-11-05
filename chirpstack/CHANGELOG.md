@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 4.20.0-3
+
+- Bump hassio-addons/debian-base from 9.5.1 to 9.5.2
+
 ## 4.20.0-2
 
 - Add optional import of chirpstack-device-profiles from /share/chirpstack/device-profiles
