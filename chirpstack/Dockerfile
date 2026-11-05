@@ -1,7 +1,7 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
 
 # Image reference is literal so Dependabot can track it
-FROM ghcr.io/hassio-addons/debian-base:9.5.1
+FROM ghcr.io/hassio-addons/debian-base:9.5.2
 
 ARG CHIRPSTACK_VERSION=4.20.0
 
