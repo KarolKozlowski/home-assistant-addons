@@ -1,6 +1,5 @@
-# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: Komodo Periphery
-version: "2.3.4-5"
+version: "2.3.4-6"
 slug: komodo-periphery
 description: Stateless agent for Komodo Core
 url: "https://github.com/karolkozlowski/home-assistant-addons/tree/main/komodo-periphery"
@@ -9,12 +8,9 @@ arch:
   - amd64
 init: false
 docker_api: true
-full_access: true
 
-# Map host procfs and sysfs into the container for system/container stats
-map:
-  - procfs:ro
-  - sysfs:ro
+# Keep host_pid FALSE to preserve S6 overlay PID 1 state
+host_pid: false
 
 options:
   core_address: ""
@@ -22,7 +18,7 @@ options:
   onboarding_key: ""
   disable_terminals: false
   disable_container_exec: false
-  include_disk_mounts: ""
+  include_disk_mounts: "/etc/hostname"
   exclude_disk_mounts: ""
   root_directory: "/data/komodo"
 schema:

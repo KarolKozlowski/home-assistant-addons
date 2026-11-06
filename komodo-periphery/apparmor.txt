@@ -5,7 +5,12 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
 
   # Capabilities
   file,
+  capability sys_admin,
+  capability mount,
   signal (send) set=(kill,term,int,hup,cont),
+
+  # Allow S6 cont-init.d to mount cgroup2 v2 hierarchy if needed
+  mount fstype=cgroup2 -> /sys/fs/cgroup/,
 
   # S6-Overlay
   /init ix,
@@ -41,24 +46,30 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
     network,
     /var/run/docker.sock rw,
 
-    # Required capabilities for sysinfo/cgroup stats scanning
+    # Capabilities for sysinfo / container metrics
     capability sys_ptrace,
     capability sys_admin,
 
-    # Access to options.json and other files within your app
+    # Access to options.json and data directory
     /data/** rwix,
 
-    # --- Container & Host Stats Monitoring Additions ---
-    # Allow reading cgroup metrics (cgroup v1 & v2)
+    # --- Container & System Metrics Access ---
+    # cgroup v1 & v2 paths
     /sys/fs/cgroup/** r,
     /sys/fs/cgroup/ r,
     /sys/devices/system/cpu/** r,
     /sys/devices/system/node/** r,
 
-    # Allow reading mounts and proc stat entries
+    # Disk & Proc statistics resolution
+    /etc/hostname r,
     /proc/mounts r,
+    /proc/stat r,
+    /proc/meminfo r,
+    /proc/uptime r,
+    /proc/sys/fs/binfmt_misc/ r,
+    /proc/sys/kernel/osrelease r,
     /proc/[0-9]*/{stat,statm,status,cgroup,cmdline,io} r,
-    # ----------------------------------------------------
+    # ----------------------------------------
 
     # Access required for service functionality
     /usr/local/bin/periphery r,

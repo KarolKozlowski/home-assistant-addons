@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 2.3.4-6
+
+- Updated AppArmor profile to allow cgroup2 & proc reads without host_pid.
+
 ## 2.3.4-5
 
 - remove hostpid and add /proc and /sys mounts
