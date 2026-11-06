@@ -42,7 +42,7 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
     network,
     /var/run/docker.sock rw,
 
-    # Capabilities for sysinfo / container metrics
+    # Capabilities for sysinfo, log streaming, and container execution
     capability sys_ptrace,
     capability sys_admin,
 
@@ -50,7 +50,6 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
     /data/** rwix,
 
     # --- Container & System Metrics Access ---
-    # cgroup v1 & v2 paths
     /sys/fs/cgroup/** r,
     /sys/fs/cgroup/ r,
     /sys/devices/system/cpu/** r,
@@ -66,6 +65,13 @@ profile komodo-periphery flags=(attach_disconnected,mediate_deleted) {
     /proc/sys/kernel/osrelease r,
     /proc/[0-9]*/{stat,statm,status,cgroup,cmdline,io} r,
     # ----------------------------------------
+
+    # --- Docker Log Streaming & Terminal TTY Access ---
+    /dev/pts/* rw,
+    /dev/ptmx rw,
+    /proc/self/fd/ r,
+    /proc/[0-9]*/fd/ r,
+    # --------------------------------------------------
 
     # Access required for service functionality
     /usr/local/bin/periphery r,

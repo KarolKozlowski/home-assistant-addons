@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 2.3.4-9
+
+- Potential AppArmor fix for docker logs
+
 ## 2.3.4-8
 
 - Fix AppArmor profile
