@@ -10,7 +10,6 @@ init: false
 docker_api: true
 
 # Keep host_pid FALSE to preserve S6 overlay PID 1 state
-host_pid: false
 
 options:
   core_address: ""
