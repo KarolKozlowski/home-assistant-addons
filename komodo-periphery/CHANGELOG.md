@@ -1,5 +1,10 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 2.3.4-4
+
+- Update AppArmor profile for periphery
+- Extend container permissions
+
 ## 2.3.4-3
 
 - Fix periphery image version for amd64
