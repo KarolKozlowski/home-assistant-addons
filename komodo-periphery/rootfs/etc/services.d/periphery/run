@@ -4,11 +4,6 @@
 # s6-overlay docs: https://github.com/just-containers/s6-overlay
 # ==============================================================================
 
-# Ensure cgroup v2 virtual filesystem is remounted read-only if missing unified tree
-if [ -d /sys/fs/cgroup ] && [ ! -e /sys/fs/cgroup/cgroup.controllers ]; then
-    mount -t cgroup2 none /sys/fs/cgroup -o ro 2>/dev/null || true
-fi
-
 # Declare variables
 declare PERIPHERY_ROOT_DIRECTORY
 declare PERIPHERY_CORE_ADDRESS
