@@ -1,5 +1,9 @@
 <!-- markdownlint-disable MD041 -->
 <!-- https://developers.home-assistant.io/docs/apps/presentation#keeping-a-changelog -->
+## 2.3.4-5
+
+- remove hostpid and add /proc and /sys mounts
+
 ## 2.3.4-4
 
 - Update AppArmor profile for periphery
